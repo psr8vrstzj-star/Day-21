@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 21-Day Fat Loss Blueprint — Free Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FFFFFF;
+    --bg-soft: #F7F8F5;
+    --forest: #1B4332;
+    --forest-deep: #0E2A1E;
+    --coral: #FF6B4A;
+    --coral-deep: #E24E30;
+    --coral-light: #FFD9CC;
+    --mustard: #E3A857;
+    --ink: #232620;
+    --ink-soft: #5B6259;
+    --line: #E6E9E2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap{
+    max-width: 640px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    background: var(--bg);
+  }
+  h1,h2,h3{
+    font-family: 'Fraunces', serif;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .mono{
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.03em;
+  }
+
+  /* ---------- Trail progress ---------- */
+  .trail{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    padding: 18px 24px 0;
+  }
+  .trail-back{
+    background:none;
+    border:none;
+    color: var(--forest);
+    font-size: 20px;
+    cursor:pointer;
+    padding: 4px 8px 4px 0;
+    opacity: 0.5;
+    transition: opacity .2s;
+  }
+  .trail-back:hover{ opacity: 1; }
+  .trail-back:disabled{ opacity:0.15; cursor:default; }
+  .trail-steps{
+    flex:1;
+    display:flex;
+    align-items:center;
+  }
+  .leaf{
+    width: 100%;
+    height: 6px;
+    border-radius: 4px;
+    background: var(--line);
+    margin: 0 2px;
+    position: relative;
+    overflow:hidden;
+  }
+  .leaf::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: linear-gradient(90deg, var(--forest), var(--coral));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .5s ease;
+  }
+  .leaf.done::after{ transform: scaleX(1); }
+  .trail-count{
+    font-size: 12px;
+    color: var(--ink-soft);
+    padding-left: 10px;
+    white-space:nowrap;
+  }
+
+  /* ---------- Screens ---------- */
+  .screen{
+    display:none;
+    flex:1;
+    flex-direction:column;
+    padding: 20px 24px 40px;
+    animation: rise .45s ease;
+  }
+  .screen.active{ display:flex; }
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn-primary{
+    background: var(--coral);
+    color: #fff;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 17px 24px;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px -10px rgba(226,78,48,0.55);
+    transition: transform .15s ease, box-shadow .15s ease;
+    width:100%;
+  }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 14px 28px -10px rgba(226,78,48,0.6);}
+  .btn-primary:active{ transform: translateY(0); }
+  .btn-primary:disabled{
+    background: #E3E0D8;
+    box-shadow:none;
+    cursor:not-allowed;
+    transform:none;
+  }
+
+  /* ---------- Question ---------- */
+  .q-eyebrow{
+    font-size: 12px;
+    font-weight:800;
+    color: var(--coral-deep);
+    text-transform:uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .q-title{
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--forest-deep);
+    line-height:1.28;
+    margin-bottom: 22px;
+  }
+  .q-title mark{
+    background: linear-gradient(180deg, transparent 58%, var(--coral-light) 58%);
+    color: var(--forest-deep);
+    padding: 0 2px;
+    font-weight: 800;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .option{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    background: var(--bg-soft);
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 16px;
+    cursor:pointer;
+    text-align:left;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--ink);
+    transition: border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .option:hover{ border-color: var(--coral); transform: translateX(2px); }
+  .option.selected{
+    border-color: var(--forest);
+    background: #EAF3E7;
+  }
+  .option .emoji{ font-size: 22px; }
+  .option .sub{
+    display:block;
+    font-weight:400;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .input-card{
+    background: var(--bg-soft);
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    padding: 22px 18px;
+    margin-bottom: 18px;
+  }
+  .input-row{
+    display:flex;
+    gap: 12px;
+  }
+  select, input[type=number]{
+    width:100%;
+    font-family:'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight:700;
+    color: var(--ink);
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 13px 12px;
+    appearance: none;
+  }
+  select:focus, input:focus{
+    outline: 2px solid var(--forest);
+    outline-offset: 1px;
+  }
+  .field-label{
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight:700;
+    margin-bottom: 6px;
+    display:block;
+  }
+
+  .q-footer{
+    margin-top:auto;
+    padding-top: 24px;
+  }
+
+  /* ---------- Loading ---------- */
+  .loading-wrap{
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap: 18px;
+  }
+  .loading-wrap .ring{
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 5px solid var(--line);
+    border-top-color: var(--coral);
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .loading-wrap h2{
+    font-size: 22px;
+    color: var(--forest-deep);
+    margin-top: 4px;
+  }
+  .loading-wrap p{ color: var(--ink-soft); font-size:14px; }
+  .loading-list{
+    text-align:left;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    width:100%;
+    margin-top: 6px;
+  }
+  .loading-list div{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    padding: 6px 0;
+  }
+  .loading-list .check{
+    color: var(--forest);
+    opacity:0;
+    transition: opacity .3s ease;
+  }
+  .loading-list .check.show{ opacity:1; }
+
+  /* ---------- Result ---------- */
+  .result-hero{
+    width:100%;
+    height: 190px;
+    object-fit:cover;
+    border-radius: 16px;
+    margin-bottom: 20px;
+  }
+  .result-tag{
+    display:inline-flex;
+    background: #EAF3E7;
+    color: var(--forest);
+    font-size: 12px;
+    font-weight:800;
+    padding: 6px 12px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+    width:fit-content;
+  }
+  .result h1{
+    font-size: 26px;
+    color: var(--forest-deep);
+    font-weight:700;
+    line-height:1.25;
+    margin-bottom: 14px;
+  }
+  .result h1 mark{
+    background: linear-gradient(180deg, transparent 58%, var(--coral-light) 58%);
+    padding: 0 2px;
+  }
+  .result > p{
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height:1.6;
+    margin-bottom: 22px;
+  }
+  .summary-card{
+    background: var(--forest-deep);
+    color:#fff;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+  .summary-card .cap{
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing:0.08em;
+    color: #B9CBBE;
+    margin-bottom: 14px;
+    font-weight:800;
+  }
+  .summary-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .summary-grid .item .v{
+    font-family:'Fraunces', serif;
+    font-size: 24px;
+    font-weight:700;
+    color: #FFB199;
+  }
+  .summary-grid .item .k{
+    font-size: 12px;
+    color: #CFE0D4;
+    margin-top:2px;
+  }
+  .divider{
+    height:1px;
+    background: rgba(255,255,255,0.15);
+    margin: 18px 0;
+  }
+  .plan-line{
+    font-size: 14px;
+    color:#E7EFE9;
+    line-height:1.6;
+  }
+  .plan-line b{ color:#fff; }
+
+  .cta-card{
+    background: var(--bg-soft);
+    border: 1.5px solid var(--line);
+    border-radius: 18px;
+    padding: 22px;
+    text-align:center;
+  }
+  .cta-card .avatar-row{
+    display:flex;
+    justify-content:center;
+    margin-bottom: 14px;
+  }
+  .cta-card .avatar-row img{
+    width: 46px;
+    height: 46px;
+    border-radius:50%;
+    object-fit:cover;
+    border: 3px solid var(--bg-soft);
+    box-shadow: 0 0 0 1px var(--line);
+    margin-left: -12px;
+  }
+  .cta-card .avatar-row img:first-child{ margin-left:0; }
+  .cta-card h3{
+    font-size: 19px;
+    color: var(--forest-deep);
+    margin-bottom: 8px;
+  }
+  .cta-card p{
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height:1.55;
+    margin-bottom: 18px;
+  }
+  .cta-headline{
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--forest-deep);
+    line-height: 1.35;
+    margin: 0 0 16px !important;
+  }
+  .messenger-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background: var(--coral);
+    color:#fff;
+    text-decoration:none;
+    font-weight:800;
+    font-size: 18px;
+    padding: 22px;
+    border-radius: 16px;
+    box-shadow: 0 10px 24px -10px rgba(226,78,48,0.55);
+    animation: pulse 1.4s infinite;
+  }
+  @keyframes pulse{
+    0%{ transform: scale(1); box-shadow: 0 10px 24px -10px rgba(226,78,48,0.55), 0 0 0 0 rgba(255,107,74,0.55); }
+    70%{ transform: scale(1.035); box-shadow: 0 10px 24px -10px rgba(226,78,48,0.55), 0 0 0 14px rgba(255,107,74,0); }
+    100%{ transform: scale(1); box-shadow: 0 10px 24px -10px rgba(226,78,48,0.55), 0 0 0 0 rgba(255,107,74,0); }
+  }
+  .trust-row{
+    display:flex;
+    justify-content:center;
+    gap: 16px;
+    margin-top: 16px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+  }
+  .trust-row span{ display:flex; align-items:center; gap:5px; }
+
+  @media (max-width:420px){
+    .q-title{ font-size:23px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="trail" id="trailBar">
+    <button class="trail-back" id="backBtn" aria-label="Back" disabled>←</button>
+    <div class="trail-steps" id="trailSteps"></div>
+    <div class="trail-count mono" id="trailCount">1/10</div>
+  </div>
+
+  <!-- QUESTIONS render here (first screen shown) -->
+  <section class="screen active" id="screen-quiz">
+    <div class="q-eyebrow" id="qEyebrow">QUESTION 1 OF 10</div>
+    <h2 class="q-title" id="qTitle"></h2>
+    <div class="options" id="qOptions"></div>
+    <div class="input-card" id="qInputCard" style="display:none;"></div>
+    <div class="q-footer">
+      <button class="btn-primary" id="qNextBtn" onclick="nextFromInput()" style="display:none;">Continue →</button>
+    </div>
+  </section>
+
+  <!-- LOADING -->
+  <section class="screen loading-wrap" id="screen-loading">
+    <div class="ring"></div>
+    <h2>Building your personal plan…</h2>
+    <p>Analyzing your answers against 21-day success patterns</p>
+    <div class="loading-list" id="loadingList">
+      <div id="li1"><span class="check" id="c1">✔</span><span>Calculating your target calorie range</span></div>
+      <div id="li2"><span class="check" id="c2">✔</span><span>Matching a meal plan to your goals</span></div>
+      <div id="li3"><span class="check" id="c3">✔</span><span>Selecting home workouts for your level</span></div>
+      <div id="li4"><span class="check" id="c4">✔</span><span>Finalizing your 21-day roadmap</span></div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="screen-result">
+    <span class="result-tag">✅ YOUR PLAN IS READY</span>
+    <div class="result">
+      <h1><mark>Based on your answers, we created a specific diet for you.</mark></h1>
+      <p id="resultSub">Your personalized 21-Day Fat Loss Blueprint is ready — built around your goals, activity level, and habits.</p>
+    </div>
+
+    <div class="summary-card">
+      <div class="cap">Your Snapshot</div>
+      <div class="summary-grid">
+        <div class="item"><div class="v" id="sumCalories">–</div><div class="k">Daily calorie target</div></div>
+        <div class="item"><div class="v" id="sumWater">–</div><div class="k">Daily water goal</div></div>
+        <div class="item"><div class="v" id="sumWorkouts">–</div><div class="k">Home workouts / week</div></div>
+        <div class="item"><div class="v" id="sumFocus">–</div><div class="k">Main focus area</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="plan-line" id="planLine"></div>
+    </div>
+
+    <div class="cta-card">
+      <h3>Clique para ter acesso a um plano de emagrecimento feito especificamente para você</h3>
+      <p>Get a full walkthrough of your snapshot and your 21-Day Blueprint — one-on-one, over chat.</p>
+      <p class="cta-headline">Click here to get access to an exclusive weight loss plan designed for you to see real results in 21 days</p>
+      <a href="#" id="messengerBtn" class="messenger-btn" target="_blank" rel="noopener">
+        💬 Chat With My Nutritionist Now
+      </a>
+      <div class="trust-row">
+        <span>🔒 Private chat</span>
+        <span>⭐ 4.9/5 rated</span>
+        <span>⚡ Replies fast</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ---------------- Quiz data ---------------- */
+const questions = [
+  {
+    key: "goal",
+    eyebrow: "QUESTION 1 OF 10",
+    title: "What's your <mark>#1 goal</mark> right now?",
+    type: "options",
+    options: [
+      {emoji:"🔥", label:"Lose weight & feel confident"},
+      {emoji:"💪", label:"Get toned & strong"},
+      {emoji:"⚡", label:"Boost my energy levels"},
+      {emoji:"👖", label:"Fit into old clothes again"},
+    ]
+  },
+  {
+    key: "age",
+    eyebrow: "QUESTION 2 OF 10",
+    title: "What's your <mark>age range</mark>?",
+    type: "options",
+    options: [
+      {emoji:"🌱", label:"18–29"},
+      {emoji:"🌿", label:"30–39"},
+      {emoji:"🌳", label:"40–49"},
+      {emoji:"🍃", label:"50+"},
+    ]
+  },
+  {
+    key: "height",
+    eyebrow: "QUESTION 3 OF 10",
+    title: "What's your <mark>height</mark>?",
+    type: "height"
+  },
+  {
+    key: "weight",
+    eyebrow: "QUESTION 4 OF 10",
+    title: "What's your <mark>current weight</mark>?",
+    type: "weight"
+  },
+  {
+    key: "goalWeight",
+    eyebrow: "QUESTION 5 OF 10",
+    title: "How much weight would you like to <mark>lose</mark>?",
+    type: "options",
+    options: [
+      {emoji:"🎯", label:"Under 10 lbs"},
+      {emoji:"🎯", label:"10–20 lbs"},
+      {emoji:"🎯", label:"20–40 lbs"},
+      {emoji:"🎯", label:"40+ lbs"},
+    ]
+  },
+  {
+    key: "activity",
+    eyebrow: "QUESTION 6 OF 10",
+    title: "How <mark>active</mark> are you day-to-day?",
+    type: "options",
+    options: [
+      {emoji:"🪑", label:"Mostly sedentary", sub:"Desk job, little movement"},
+      {emoji:"🚶", label:"Lightly active", sub:"Some walking, light chores"},
+      {emoji:"🏃", label:"Active", sub:"Regular exercise a few times a week"},
+      {emoji:"🏋️", label:"Very active", sub:"Intense exercise most days"},
+    ]
+  },
+  {
+    key: "struggle",
+    eyebrow: "QUESTION 7 OF 10",
+    title: "What's your biggest <mark>struggle</mark> with weight loss?",
+    type: "options",
+    options: [
+      {emoji:"🍫", label:"Cravings & snacking"},
+      {emoji:"⏰", label:"No time to cook"},
+      {emoji:"🤷", label:"Don't know what to eat"},
+      {emoji:"😩", label:"Lack of motivation"},
+    ]
+  },
+  {
+    key: "meals",
+    eyebrow: "QUESTION 8 OF 10",
+    title: "How many <mark>meals</mark> do you usually eat per day?",
+    type: "options",
+    options: [
+      {emoji:"1️⃣", label:"1–2 meals"},
+      {emoji:"3️⃣", label:"3 meals"},
+      {emoji:"5️⃣", label:"4–5 small meals"},
+      {emoji:"❌", label:"I often skip meals"},
+    ]
+  },
+  {
+    key: "water",
+    eyebrow: "QUESTION 9 OF 10",
+    title: "How much <mark>water</mark> do you drink daily?",
+    type: "options",
+    options: [
+      {emoji:"💧", label:"Less than 4 cups"},
+      {emoji:"💧", label:"4–6 cups"},
+      {emoji:"💧", label:"7–9 cups"},
+      {emoji:"💧", label:"9+ cups"},
+    ]
+  },
+  {
+    key: "timeline",
+    eyebrow: "QUESTION 10 OF 10",
+    title: "How soon do you want to see <mark>real results</mark>?",
+    type: "options",
+    options: [
+      {emoji:"🚀", label:"ASAP — I'm ready now"},
+      {emoji:"📅", label:"Within a month"},
+      {emoji:"🗓️", label:"Within 3 months"},
+      {emoji:"👀", label:"Just exploring for now"},
+    ]
+  },
+];
+
+const answers = {};
+let current = 0;
+
+/* ---------------- Navigation ---------------- */
+function show(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function buildTrail(){
+  const trail = document.getElementById("trailSteps");
+  trail.innerHTML = "";
+  questions.forEach((_, i) => {
+    const leaf = document.createElement("div");
+    leaf.className = "leaf";
+    leaf.id = "leaf-" + i;
+    trail.appendChild(leaf);
+  });
+}
+
+function updateTrail(){
+  questions.forEach((_, i) => {
+    document.getElementById("leaf-" + i).classList.toggle("done", i < current);
+  });
+  document.getElementById("trailCount").textContent = (current + 1) + "/" + questions.length;
+  document.getElementById("backBtn").disabled = current === 0;
+}
+
+document.getElementById("backBtn").addEventListener("click", () => {
+  if (current > 0){
+    current--;
+    renderQuestion();
+  }
+});
+
+function renderQuestion(){
+  const q = questions[current];
+  updateTrail();
+  document.getElementById("qEyebrow").textContent = q.eyebrow;
+  document.getElementById("qTitle").innerHTML = q.title;
+
+  const optWrap = document.getElementById("qOptions");
+  const inputCard = document.getElementById("qInputCard");
+  const nextBtn = document.getElementById("qNextBtn");
+  optWrap.innerHTML = "";
+  inputCard.innerHTML = "";
+  inputCard.style.display = "none";
+  nextBtn.style.display = "none";
+
+  if (q.type === "options"){
+    q.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className = "option";
+      btn.innerHTML = `<span class="emoji">${opt.emoji}</span><span>${opt.label}${opt.sub ? `<span class="sub">${opt.sub}</span>` : ""}</span>`;
+      if (answers[q.key] === opt.label) btn.classList.add("selected");
+      btn.onclick = () => {
+        answers[q.key] = opt.label;
+        advance();
+      };
+      optWrap.appendChild(btn);
+    });
+  }
+
+  if (q.type === "height"){
+    inputCard.style.display = "block";
+    const savedFt = answers.heightFt || 5;
+    const savedIn = answers.heightIn || 6;
+    inputCard.innerHTML = `
+      <label class="field-label">Feet & inches</label>
+      <div class="input-row">
+        <select id="heightFt"></select>
+        <select id="heightIn"></select>
+      </div>
+    `;
+    const ft = document.getElementById("heightFt");
+    for(let i=4;i<=7;i++){ ft.innerHTML += `<option value="${i}" ${i===savedFt?"selected":""}>${i} ft</option>`; }
+    const inch = document.getElementById("heightIn");
+    for(let i=0;i<=11;i++){ inch.innerHTML += `<option value="${i}" ${i===savedIn?"selected":""}>${i} in</option>`; }
+    nextBtn.style.display = "block";
+    nextBtn.disabled = false;
+    nextBtn.textContent = "Continue →";
+  }
+
+  if (q.type === "weight"){
+    inputCard.style.display = "block";
+    inputCard.innerHTML = `
+      <label class="field-label">Current weight (lbs)</label>
+      <input type="number" id="weightInput" placeholder="e.g. 175" min="70" max="500" value="${answers.weight || ""}">
+    `;
+    nextBtn.style.display = "block";
+    nextBtn.textContent = "Continue →";
+    nextBtn.disabled = !answers.weight;
+    document.getElementById("weightInput").addEventListener("input", (e) => {
+      nextBtn.disabled = !e.target.value;
+    });
+  }
+}
+
+function advance(){
+  if (current < questions.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    runLoading();
+  }
+}
+
+function nextFromInput(){
+  const q = questions[current];
+  if (q.type === "height"){
+    answers.heightFt = parseInt(document.getElementById("heightFt").value);
+    answers.heightIn = parseInt(document.getElementById("heightIn").value);
+  }
+  if (q.type === "weight"){
+    answers.weight = document.getElementById("weightInput").value;
+  }
+  advance();
+}
+
+/* ---------------- Loading sequence ---------------- */
+function runLoading(){
+  show("screen-loading");
+  const steps = ["c1","c2","c3","c4"];
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      document.getElementById(id).classList.add("show");
+    }, 500 + i * 550);
+  });
+  setTimeout(buildResult, 500 + steps.length * 550 + 400);
+}
+
+/* ---------------- Result logic ---------------- */
+function buildResult(){
+  const weight = parseInt(answers.weight) || 170;
+  const heightIn = (answers.heightFt || 5) * 12 + (answers.heightIn || 6);
+
+  const bmrEstimate = Math.round(10 * (weight / 2.2) + 6.25 * (heightIn * 2.54) - 5 * 32 - 161);
+  const calorieTarget = Math.max(1200, Math.round((bmrEstimate * 1.35) - 500));
+
+  const waterCups = Math.round((weight / 2) / 8);
+
+  const workoutsMap = {
+    "Mostly sedentary": "3",
+    "Lightly active": "4",
+    "Active": "5",
+    "Very active": "5",
+  };
+  const workouts = workoutsMap[answers.activity] || "4";
+
+  const focusMap = {
+    "Cravings & snacking": "Craving control",
+    "No time to cook": "Quick meals",
+    "Don't know what to eat": "Meal clarity",
+    "Lack of motivation": "Daily habits",
+  };
+  const focus = focusMap[answers.struggle] || "Consistency";
+
+  document.getElementById("sumCalories").textContent = calorieTarget.toLocaleString() + " cal";
+  document.getElementById("sumWater").textContent = waterCups + " cups";
+  document.getElementById("sumWorkouts").textContent = workouts + "x / wk";
+  document.getElementById("sumFocus").textContent = focus;
+
+  document.getElementById("planLine").innerHTML =
+    `Your plan is built around <b>${(answers.goal || "your goal").toLowerCase()}</b>, with a meal structure ` +
+    `designed for <b>${(answers.meals || "your routine").toLowerCase()}</b> and workouts sized for a ` +
+    `<b>${(answers.activity || "your activity level").toLowerCase()}</b> lifestyle.`;
+
+  show("screen-result");
+}
+
+/* Messenger link placeholder — replace href with your Messenger deep link */
+document.getElementById("messengerBtn").setAttribute("href", "https://pay.hotmart.com/R106739111M?bid=1784261017393");
+
+/* ---------------- Init: open directly on Question 1 ---------------- */
+buildTrail();
+renderQuestion();
+</script>
+</body>
+</html>
